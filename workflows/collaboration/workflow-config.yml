@@ -1,0 +1,170 @@
+# Codex 与 Claude 协作工作流配置
+
+# 工作流定义
+workflows:
+  # 日常开发工作流
+  daily-development:
+    name: "日常开发工作流"
+    description: "完整的日常开发流程"
+    steps:
+      - name: "任务理解"
+        tool: "codex"
+        action: "对话式任务理解"
+        prompt_template: "codex-task-understanding"
+
+      - name: "代码生成"
+        tool: "codex"
+        action: "生成实现代码"
+        prompt_template: "codex-code-generation"
+
+      - name: "代码审查"
+        tool: "claude-plugin"
+        action: "实时代码审查"
+        prompt_template: "claude-code-review"
+
+      - name: "验证测试"
+        tool: "claude-cli"
+        action: "运行测试和验证"
+        prompt_template: "claude-verification"
+
+      - name: "提交代码"
+        tool: "claude-cli"
+        action: "生成commit message并提交"
+        prompt_template: "claude-commit"
+
+  # Bug 修复工作流
+  bug-fix:
+    name: "Bug 修复工作流"
+    description: "完整的 Bug 修复流程"
+    steps:
+      - name: "问题分析"
+        tool: "codex"
+        action: "分析问题原因"
+        prompt_template: "codex-problem-analysis"
+
+      - name: "生成修复方案"
+        tool: "codex"
+        action: "生成修复代码"
+        prompt_template: "codex-fix-generation"
+
+      - name: "应用修复"
+        tool: "vscode"
+        action: "在 VSCode 中应用修复"
+        prompt_template: "vscode-apply-fix"
+
+      - name: "验证修复"
+        tool: "claude-cli"
+        action: "验证修复结果"
+        prompt_template: "claude-fix-verification"
+
+  # 代码重构工作流
+  refactoring:
+    name: "代码重构工作流"
+    description: "完整的代码重构流程"
+    steps:
+      - name: "重构分析"
+        tool: "codex"
+        action: "分析代码结构"
+        prompt_template: "codex-refactor-analysis"
+
+      - name: "生成重构方案"
+        tool: "codex"
+        action: "生成重构代码"
+        prompt_template: "codex-refactor-generation"
+
+      - name: "应用重构"
+        tool: "vscode"
+        action: "在 VSCode 中应用重构"
+        prompt_template: "vscode-apply-refactor"
+
+      - name: "验证重构"
+        tool: "claude-cli"
+        action: "验证重构结果"
+        prompt_template: "claude-refactor-verification"
+
+# 工具配置
+tools:
+  codex:
+    path: "codex"
+    context: "整个代码库"
+    strengths:
+      - "代码生成"
+      - "架构设计"
+      - "问题分析"
+      - "重构建议"
+
+  claude-plugin:
+    path: "vscode-plugin"
+    context: "当前文件 + 对话历史"
+    strengths:
+      - "实时审查"
+      - "质量检查"
+      - "快速建议"
+
+  claude-cli:
+    path: "claude"
+    context: "项目结构 + 工作流状态"
+    strengths:
+      - "工作流执行"
+      - "测试运行"
+      - "报告生成"
+      - "Git 操作"
+
+# 提示词模板配置
+prompt_templates:
+  codex-task-understanding:
+    template: |
+      我需要完成以下任务：
+      {task_description}
+
+      请帮我：
+      1. 分析任务需求
+      2. 设计实现方案
+      3. 生成任务清单
+
+  codex-code-generation:
+    template: |
+      根据以下设计方案，生成完整实现代码：
+      {design方案}
+
+      要求：
+      1. 遵循代码规范
+      2. 包含错误处理
+      3. 包含注释
+
+  claude-code-review:
+    template: |
+      @claude 审查这段代码：
+      {code}
+
+      检查：
+      1. 代码质量
+      2. 性能问题
+      3. 安全漏洞
+      4. 代码异味
+
+  claude-verification:
+    template: |
+      claude-code "执行以下验证：
+      1. 运行单元测试
+      2. 检查代码覆盖率
+      3. 生成质量报告"
+
+  claude-commit:
+    template: |
+      claude-code "分析当前更改，生成规范的 commit message，提交代码"
+
+# 质量门禁配置
+quality_gates:
+  code_review:
+    required: true
+    min_approval: 1
+
+  test_coverage:
+    min_coverage: 80
+
+  security_scan:
+    required: true
+
+  performance_test:
+    required: false
