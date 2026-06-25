@@ -41,6 +41,10 @@ workflows/
 | `homunculus-observer.js` | Homunculus 观察者 — 行为模式学习 |
 | `agentshield-scanner.js` | AgentShield 扫描器 — 安全规则扫描 |
 | `vector-store.js` | 向量存储 — 语义搜索支持 |
+| `base-workflow.js` | 基础工作流 — 工作流基类和通用工具 |
+| `workflow-executor.js` | 工作流执行器 — 执行和管理工作流 |
+| `agent-teams-config.js` | Agent Teams 配置 — 多 Agent 团队协作配置 |
+| `example-usage.js` | 使用示例 — 工作流使用示例 |
 
 ## 使用方法
 
@@ -65,3 +69,15 @@ node workflows/__tests__/validate.js
 ## 许可证
 
 MIT License
+
+## 📋 更新日志
+
+### 2026-06-25
+
+- ✅ 同步全局 workflows 到仓库
+- ✅ 新增 4 个核心工作流：
+  - `base-workflow.js` - 基础工作流基类
+  - `workflow-executor.js` - 工作流执行器
+  - `agent-teams-config.js` - Agent Teams 配置
+  - `example-usage.js` - 使用示例
+- ✅ 更新 README，添加新工作流说明
